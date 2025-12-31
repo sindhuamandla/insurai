@@ -1,0 +1,20 @@
+<div class="bar">
+  <div class="left">
+    <div class="title">Availability hub</div>
+    <div class="range">{{ formatWeekRange(weekStart) }}</div>
+  </div>
+  <div class="controls">
+    <button type="button" class="button" (click)="goPrevWeek()">
+      ◀ Prev
+    </button>
+    <button type="button" class="button" (click)="goToday()">
+      Today
+    </button>
+    <button type="button" class="button" (click)="goNextWeek()">
+      Next ▶
+    </button>
+    <button type="button" class="pill" [class.active]="view === 'week'" (click)="setView('week')">
+      Week view
+    </button>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="page">
+  <div class="shell">
+    <div class="header-row">
+      <div>
+        <div class="title">Agent availability</div>
+        <div class="subtitle">
+          Set when you are available so customers can book appointments.
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+    <div class="layout">
+      <div class="card">
+        <app-availability-top-bar [view]="view" (viewChange)="view = $event" [weekStart]="selectedWeekStart"
+          (weekStartChange)="selectedWeekStart = $event"></app-availability-top-bar>
+
+        <app-availability-calendar [view]="view" [weekStart]="selectedWeekStart" [availability]="availability"
+          [appointments]="appointments" [loading]="loading"
+          (createSlot)="handleCreateSlot($event)"></app-availability-calendar>
+      </div>
+
+      <div class="card">
+        <app-availability-summary [availability]="availability" [loading]="loading"></app-availability-summary>
+      </div>
+    </div>
+  </div>
+</div>

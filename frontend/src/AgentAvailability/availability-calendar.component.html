@@ -1,0 +1,71 @@
+<div class="wrapper">
+  <div class="header-row">
+    <div class="time-header">Time</div>
+    <div *ngFor="let d of DAYS" class="day-header">
+      {{ d }}
+    </div>
+  </div>
+
+  <div *ngFor="let t of TIMES" class="row">
+    <div class="time-cell">{{ t }}</div>
+    <div *ngFor="let d of DAYS; let i = index" class="grid-cell" (click)="openAddModal(i, t)">
+
+      <ng-container *ngIf="findSlotsForCell(getDayDate(i), t) as slots">
+        <div class="cell-base" [ngClass]="{
+               'cell-avail': slots.inAvail,
+               'cell-booked': slots.inBooked
+             }">
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="add-button-row">
+    <button type="button" class="add-button" (click)="openAddModal(0)">
+      + Add availability
+    </button>
+  </div>
+
+  <div class="helper">
+    Click anywhere in the grid to quickly prefill date and start time,
+    then adjust the range in the dialog.
+  </div>
+</div>
+
+<div *ngIf="modalOpen" class="modal-backdrop" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">Add availability slot</div>
+
+    <div class="modal-row">
+      <label class="label">Date</label>
+      <input type="date" [(ngModel)]="modalData.date" class="input">
+    </div>
+
+    <div class="two-col-row">
+      <div class="col">
+        <label class="label">Start time</label>
+        <input type="time" [(ngModel)]="modalData.startTime" class="input">
+      </div>
+      <div class="col">
+        <label class="label">End time</label>
+        <input type="time" [(ngModel)]="modalData.endTime" class="input">
+      </div>
+    </div>
+
+    <div class="modal-row">
+      <label class="label">Notes (optional)</label>
+      <textarea [(ngModel)]="modalData.notes" class="textarea"></textarea>
+    </div>
+
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <div class="modal-footer">
+      <button type="button" class="modal-btn" (click)="closeModal()" [disabled]="saving">
+        Cancel
+      </button>
+      <button type="button" class="modal-btn-primary" (click)="handleSave()" [disabled]="saving">
+        {{ saving ? 'Saving...' : 'Save slot' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<div class="wrapper" *ngIf="loading; else content">
+  <div class="title">Availability overview</div>
+  <div class="line">Loading...</div>
+</div>
+
+<ng-template #content>
+  <div class="wrapper">
+    <div class="title">Availability overview</div>
+
+    <div class="line">
+      <span class="label">Open slots</span>
+      {{ openSlots.length }}
+    </div>
+    <div class="line">
+      <span class="label">Booked slots</span>
+      {{ bookedSlots.length }}
+    </div>
+    <div class="line">
+      <span class="label">Total hours open</span>
+      {{ totalHoursOpen }} h
+    </div>
+
+    <div class="hint">
+      Use the weekly grid to add or adjust your available slots. Customers
+      can only book against slots marked as OPEN.
+    </div>
+  </div>
+</ng-template>
