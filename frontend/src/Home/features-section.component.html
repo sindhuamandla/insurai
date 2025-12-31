@@ -1,0 +1,30 @@
+<section class="home-section narrow" aria-label="Key features">
+  <div class="header-container">
+    <header class="header-content">
+      <div class="hero-kicker">Platform capabilities</div>
+      <h2 class="section-title">
+        Everything you need in one insurance workspace
+      </h2>
+      <p class="section-subtitle">
+        InsurAI connects customers, agents and admins through a single
+        interface—covering queries, appointments, plans and performance.
+      </p>
+    </header>
+
+    <button type="button" class="btn-outline" (click)="openAppointments.emit()">
+      Appointments
+    </button>
+  </div>
+
+  <div class="features-grid">
+    <article *ngFor="let f of visibleFeatures" class="feature-card"
+      [style.cursor]="isClickable(f.key) ? 'pointer' : 'default'" (click)="handleClick(f.key)"
+      (keydown.enter)="handleClick(f.key)" [attr.tabindex]="isClickable(f.key) ? 0 : -1">
+      <div class="feature-icon" [ngStyle]="getIconStyle(f.accent)">
+        <span style="font-size: 0.9rem">★</span>
+      </div>
+      <h3 class="feature-title">{{ f.title }}</h3>
+      <p class="feature-text">{{ f.text }}</p>
+    </article>
+  </div>
+</section>

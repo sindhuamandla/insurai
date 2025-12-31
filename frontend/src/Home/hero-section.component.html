@@ -1,0 +1,82 @@
+<section class="page-root">
+  <!-- FULL-WIDTH NAVBAR -->
+  <div class="nav-shell">
+    <header class="navbar">
+      <!-- Left: logo + main links -->
+      <div class="nav-left">
+        <div class="logo-pill">
+          <div class="logo-icon">🛡️</div>
+          <span class="logo-text">
+            INSU<span style="color: #60a5fa">RAI</span>
+          </span>
+        </div>
+
+        <nav class="link-row">
+          <button type="button" class="nav-link" (click)="goHome.emit()">
+            Home
+          </button>
+          <button type="button" class="nav-link" (click)="viewPlans.emit()">
+            Plans
+          </button>
+          <button type="button" class="nav-link" (click)="openContact.emit()">
+            Support
+          </button>
+
+          <!-- My Appointments: common for all logged-in users -->
+          <button *ngIf="isLoggedIn" type="button" class="nav-link" (click)="openAppointments.emit()">
+            My Appointments
+          </button>
+
+          <!-- Role-based middle buttons -->
+          <button *ngIf="isCustomer" type="button" class="nav-link nav-link-primary" (click)="openScheduling.emit()">
+            Schedule Appointments
+          </button>
+
+          <button *ngIf="isAgent" type="button" class="nav-link nav-link-primary" (click)="openAvailability.emit()">
+            Agent Availability Management
+          </button>
+
+          <button *ngIf="isAdmin" type="button" class="nav-link nav-link-primary" (click)="openAdmin.emit()">
+            Admin
+          </button>
+        </nav>
+      </div>
+
+      <!-- Right: notifications + profile OR auth buttons -->
+      <div class="nav-right">
+        <ng-container *ngIf="isLoggedIn">
+          <button type="button" class="icon-badge" (click)="openNotifications.emit()" title="Notifications">
+            <span class="bell-icon">🔔</span>
+            <span class="badge-dot"></span>
+          </button>
+
+          <button type="button" class="profile-badge" (click)="openProfile.emit()" title="Account & profile">
+            <span class="profile-icon">👤</span>
+          </button>
+        </ng-container>
+      </div>
+    </header>
+  </div>
+
+  <!-- HERO CONTENT BELOW NAVBAR -->
+  <div class="hero-content">
+    <p class="kicker">Corporate insurance · AI powered</p>
+    <h1 class="hero-title">
+      Welcome to InsurAI Corporate Insurance
+    </h1>
+    <p class="hero-subtitle">
+      Effortless appointments, powerful agent support, and smart insurance
+      workflows—connected through voice, automation and real-time insights
+      for modern enterprises.
+    </p>
+
+    <div class="hero-ctas">
+      <button type="button" class="get-started-btn" (click)="login.emit()">
+        Get started
+      </button>
+      <button type="button" class="hero-secondary" (click)="viewPlans.emit()">
+        View Plans
+      </button>
+    </div>
+  </div>
+</section>

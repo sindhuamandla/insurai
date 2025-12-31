@@ -1,0 +1,22 @@
+<div class="home-root app-root">
+  <div #featuresRef>
+    <app-hero-section [auth]="auth" (login)="handleLogin()" (register)="handleRegister()"
+      (viewPlans)="handleViewPlans()" (openAssistant)="handleOpenAssistant()"
+      (openAvailability)="handleOpenAvailability()" (openScheduling)="handleOpenScheduling()"
+      (openAppointments)="handleOpenAppointments()" (openNotifications)="handleOpenNotifications()"
+      (openProfile)="handleOpenProfile()" (openContact)="handleOpenContact()" (openAdmin)="handleOpenAdmin()"
+      (goHome)="handleGoHome()"></app-hero-section>
+
+    <app-features-section [auth]="auth" (openAssistant)="handleOpenAssistant()"
+      (openAvailability)="handleOpenAvailability()" (openScheduling)="handleOpenScheduling()"
+      (openAppointments)="handleOpenAppointments()" (openPlans)="handleViewPlans()"
+      (openContact)="handleOpenContact()"></app-features-section>
+  </div>
+
+  <app-how-it-works-section></app-how-it-works-section>
+
+  <app-about-section></app-about-section>
+
+  <app-footer-section (viewPlans)="handleViewPlans()" (openContact)="handleOpenContact()"
+    (openAssistant)="handleOpenAssistant()"></app-footer-section>
+</div>

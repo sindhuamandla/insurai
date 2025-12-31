@@ -1,0 +1,31 @@
+.footer-root {
+  background: #000;
+  padding: 2rem 6vw;
+  border-top: 1px solid rgba(55, 65, 81, 0.5);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.footer-links a {
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.footer-links a:hover {
+  color: #f9fafb;
+}
+
+.footer-bottom {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #6b7280;
+}

@@ -1,0 +1,13 @@
+<footer class="footer-root">
+  <div class="footer-links">
+    <a (click)="viewPlans.emit(); $event.preventDefault()" href="#plans">Plans</a>
+    <a (click)="openAssistant.emit(); $event.preventDefault()" href="#faq">FAQ</a>
+    <a (click)="openContact.emit(); $event.preventDefault()" href="#contact">Contact</a>
+  </div>
+
+  <div class="footer-bottom">
+    <div>
+      © {{ currentYear }} InsurAI Corporate Insurance. All rights reserved.
+    </div>
+  </div>
+</footer>

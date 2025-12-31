@@ -1,0 +1,24 @@
+<section class="home-section dark-slab">
+  <div class="timeline-root">
+    <div>
+      <div class="hero-kicker">How it works</div>
+      <h2 style="font-size: 1.6rem; fontWeight: 700; margin-bottom: 0.6rem; color: #f9fafb;">
+        From query to coverage in a few steps
+      </h2>
+      <p style="font-size: 0.9rem; color: #b0b5bd; max-width: 28rem;">
+        InsurAI streamlines the entire journey—from the first question to a
+        signed policy and every renewal after—so teams stay focused on
+        decisions, not paperwork.
+      </p>
+    </div>
+
+    <div class="timeline-steps">
+      <div *ngFor="let s of steps" class="timeline-step">
+        <div class="timeline-dot"></div>
+        <div class="step-label">{{ s.label }}</div>
+        <div class="step-title">{{ s.title }}</div>
+        <div class="step-text">{{ s.text }}</div>
+      </div>
+    </div>
+  </div>
+</section>
