@@ -1,0 +1,104 @@
+<div class="contact-root app-root">
+  <header class="contact-topbar">
+    <div>
+      <div class="contact-title">Contact &amp; Support</div>
+      <div class="contact-subtitle">
+        Reach out for help with appointments, plans, or technical issues.
+      </div>
+    </div>
+  </header>
+
+  <main class="contact-main">
+    <section class="contact-form glass-card">
+      <form (ngSubmit)="handleSubmit()">
+        <label class="contact-label">
+          <span>Subject</span>
+          <input type="text" [(ngModel)]="form.subject" name="subject" (ngModelChange)="update('subject', $event)"
+            [class]="errors.subject ? 'contact-input error' : 'contact-input'"
+            placeholder="Issue with appointment booking, question about car plan, etc." />
+          <div *ngIf="errors.subject" class="contact-error">{{ errors.subject }}</div>
+        </label>
+
+        <label class="contact-label">
+          <span>Category</span>
+          <select [(ngModel)]="form.category" name="category" (ngModelChange)="update('category', $event)"
+            [class]="errors.category ? 'contact-input error' : 'contact-input'">
+            <option value="">Select a category</option>
+            <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+          </select>
+          <div *ngIf="errors.category" class="contact-error">{{ errors.category }}</div>
+        </label>
+
+        <label class="contact-label">
+          <span>Name</span>
+          <input type="text" [(ngModel)]="form.name" name="name" (ngModelChange)="update('name', $event)"
+            class="contact-input" placeholder="Your name" />
+        </label>
+
+        <label class="contact-label">
+          <span>Email</span>
+          <input type="email" [(ngModel)]="form.email" name="email" (ngModelChange)="update('email', $event)"
+            [class]="errors.email ? 'contact-input error' : 'contact-input'" placeholder="you@example.com" />
+          <div *ngIf="errors.email" class="contact-error">{{ errors.email }}</div>
+        </label>
+
+        <label class="contact-label">
+          <span>Phone (optional)</span>
+          <input type="tel" [(ngModel)]="form.phone" name="phone" (ngModelChange)="update('phone', $event)"
+            class="contact-input" placeholder="For callback if needed" />
+        </label>
+
+        <label class="contact-label">
+          <span>Message</span>
+          <textarea rows="4" [(ngModel)]="form.message" name="message" (ngModelChange)="update('message', $event)"
+            [class]="errors.message ? 'contact-input error' : 'contact-input'"
+            placeholder="Describe your issue or question in detail…"></textarea>
+          <div *ngIf="errors.message" class="contact-error">{{ errors.message }}</div>
+        </label>
+
+        <label class="contact-label">
+          <span>Attachment (optional)</span>
+          <input type="file" (change)="handleFile($event)" class="contact-file" />
+          <div *ngIf="file" class="contact-file-info">
+            {{ file.name }} ({{ (file.size / 1024) | number:'1.0-0' }} KB)
+          </div>
+        </label>
+
+        <div *ngIf="success" class="contact-success">
+          Your request has been submitted. We will contact you using the email or phone you provided.
+        </div>
+
+        <div class="contact-actions">
+          <button type="submit" class="btn-primary" [disabled]="submitting">
+            {{ submitting ? "Submitting…" : "Submit Request" }}
+          </button>
+          <button type="button" class="btn-outline" (click)="clearForm()">
+            Clear form
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <aside class="contact-side">
+      <div class="glass-card contact-side-card">
+        <h3>Support information</h3>
+        <p>Support hours: Mon–Sat, 9:00 AM – 6:00 PM IST</p>
+        <p>Typical response time: within 24 hours.</p>
+      </div>
+
+      <div class="glass-card contact-side-card">
+        <h3>Quick links</h3>
+        <button type="button" class="btn-outline" (click)="goFaq()">
+          View FAQ / Assistant
+        </button>
+        <button type="button" class="btn-outline" (click)="goAppointments()">
+          Check Appointment Status
+        </button>
+        <button type="button" class="btn-outline" (click)="goPlans()">
+          Browse Plans
+        </button>
+      </div>
+
+    </aside>
+  </main>
+</div>
