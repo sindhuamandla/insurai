@@ -1,0 +1,93 @@
+<div class="page-root">
+  <div class="grid-shell">
+    <!-- Left info panel -->
+    <div class="left-panel">
+      <div class="brand-row">
+        <span class="brand-icon">
+          <!-- Simplified icon representation -->
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </span>
+        <span class="brand-text">InsurAI</span>
+      </div>
+      <h2 class="left-title">Get started with us</h2>
+      <p class="left-text">
+        Create your InsurAI account to explore plans, book appointments and
+        manage corporate insurance in one modern workspace.
+      </p>
+    </div>
+
+    <!-- Right form card -->
+    <div class="card">
+      <h1 class="title">Sign Up Account</h1>
+
+      <div *ngIf="error" class="error">{{ error }}</div>
+
+      <form (ngSubmit)="handleSignUp()" class="form">
+        <label class="label">
+          <span class="label-text">Full name</span>
+          <input type="text" class="input" [(ngModel)]="name" name="name" required />
+        </label>
+
+        <div class="two-col">
+          <label class="label">
+            <span class="label-text">Email</span>
+            <input type="email" class="input" [(ngModel)]="email" name="email" required autocomplete="email" />
+          </label>
+
+          <label class="label">
+            <span class="label-text">Phone</span>
+            <input type="tel" class="input" placeholder="10 digit number" [ngModel]="phone"
+              (ngModelChange)="handlePhoneChange($event)" name="phone"
+              [style.borderColor]="fieldError ? 'rgba(248,113,113,0.9)' : 'rgba(55,65,81,0.9)'" />
+            <span *ngIf="fieldError" class="field-error">{{ fieldError }}</span>
+          </label>
+        </div>
+
+        <label class="label">
+          <span class="label-text">Password</span>
+          <div class="password-wrapper">
+            <input [type]="showPassword ? 'text' : 'password'" class="input password-input" [(ngModel)]="password"
+              name="password" required minlength="8" />
+            <button type="button" (click)="togglePassword()" class="eye-button"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4b5563" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+          <span class="helper">Must be at least 8 characters.</span>
+        </label>
+
+        <button type="submit" [disabled]="loading" class="primary-button">
+          {{ loading ? 'Creating account...' : 'Create account' }}
+          <!-- Paperplane icon -->
+          <svg style="margin-left: 8px" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+
+      <div class="divider-row">
+        <span class="divider-line"></span>
+        <span class="divider-text">or</span>
+        <span class="divider-line"></span>
+      </div>
+
+      <p class="switch-text">
+        Already have an account?
+        <button type="button" (click)="onLoginClick()" class="link-button">
+          Log in
+        </button>
+      </p>
+    </div>
+  </div>
+</div>
