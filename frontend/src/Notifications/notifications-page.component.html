@@ -1,0 +1,195 @@
+<div class="notifications-page">
+  <div class="shell">
+    <div class="header-row">
+      <div>
+        <div class="title">Notifications</div>
+        <div class="subtitle">
+          Stay updated with appointments, promotions, and important alerts.
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <div class="pill-tabs">
+          <button type="button" class="pill" [class.active]="activeTab === 'notifications'"
+            (click)="setActiveTab('notifications')">Notifications</button>
+          <button type="button" class="pill" [class.active]="activeTab === 'support'"
+            (click)="setActiveTab('support')">My Support Tickets</button>
+        </div>
+        <button *ngIf="activeTab === 'notifications'" type="button" class="pill-button" (click)="handleMarkAllAsRead()">
+          ✓ Mark all read
+        </button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <!-- Left: Notifications list -->
+      <div class="card">
+        <div class="filters-row">
+          <input class="input" placeholder="Search notifications…" [(ngModel)]="search" />
+          <select class="select" [(ngModel)]="typeFilter">
+            <option value="All">All types</option>
+            <option value="APPOINTMENT">Appointments</option>
+            <option value="PROMOTION">Promotions</option>
+            <option value="ALERT">Alerts</option>
+            <option value="SUCCESS">Success</option>
+          </select>
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox" [(ngModel)]="unreadOnly" />
+            Unread only
+          </label>
+        </div>
+
+        <div class="notifications-list">
+          <div *ngIf="loading" class="empty-state">Loading notifications…</div>
+          <div *ngIf="!loading && filteredNotifications.length === 0" class="empty-state">
+            No notifications found.
+          </div>
+
+          <div *ngFor="let n of filteredNotifications" class="notification-row" [class.selected]="selected?.id === n.id"
+            [class.unread]="!n.isRead" (click)="handleRowClick(n)">
+            <div class="notification-icon" [style.background]="getTypeColor(n.type) + '22'"
+              [style.color]="getTypeColor(n.type)">
+              {{ getTypeIcon(n.type) }}
+            </div>
+
+            <div class="notification-center">
+              <div class="notification-title">
+                {{ n.title }}
+              </div>
+              <div class="notification-message">
+                {{ n.message }}
+              </div>
+              <div class="notification-time">
+                {{ formatTime(n.createdAt) }}
+              </div>
+            </div>
+
+            <div *ngIf="!n.isRead" class="unread-dot"></div>
+          </div>
+        </div>
+
+        <!-- SUPPORT TICKETS LIST -->
+        <div *ngIf="activeTab === 'support'" class="notifications-list">
+          <div *ngIf="supportLoading" class="empty-state">Loading tickets…</div>
+          <div *ngIf="!supportLoading && supportTickets.length === 0" class="empty-state">
+            No support tickets found.
+          </div>
+
+          <div *ngFor="let t of supportTickets" class="notification-row" [class.selected]="selectedTicket?.id === t.id"
+            (click)="selectedTicket = t">
+            <div class="notification-icon" style="background: rgba(139,92,246,0.15); color: #8b5cf6;">
+              🎫
+            </div>
+            <div class="notification-center">
+              <div class="notification-title">{{ t.subject }}</div>
+              <div class="notification-message">
+                <span style="font-size:12px; opacity:0.8;">{{ t.category }} — {{ t.status }}</span>
+                <div style="margin-top:2px;">{{ t.message | slice:0:50 }}...</div>
+              </div>
+              <div class="notification-time">{{ formatTime(t.createdAt) }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="error && activeTab === 'notifications'" class="error">{{ error }}</div>
+      </div>
+
+      <!-- Right: Notification details -->
+      <div class="card">
+        <div class="side-title">
+          Notification details
+          <span *ngIf="selected" class="side-badge">ID {{ selected.id }}</span>
+        </div>
+
+        <ng-container *ngIf="activeTab === 'notifications' && selected; else noSelection">
+          <div class="side-label">Type</div>
+          <div class="side-value">
+            <span class="type-badge" [style.background]="getTypeColor(selected.type) + '22'"
+              [style.color]="getTypeColor(selected.type)">
+              {{ getTypeIcon(selected.type) }} {{ selected.type || "INFO" }}
+            </span>
+          </div>
+
+          <div class="side-label">Title</div>
+          <div class="side-value">{{ selected.title }}</div>
+
+          <div class="side-label">Message</div>
+          <div class="side-value">
+            {{ selected.message || "No message provided" }}
+          </div>
+
+          <div class="side-label">Time</div>
+          <div class="side-value">
+            {{ formatDateDetail(selected.createdAt) }}
+          </div>
+
+          <div class="side-label">Status</div>
+          <div class="side-value">
+            <span class="status-badge"
+              [style.background]="selected.isRead ? 'rgba(107,114,128,0.2)' : 'rgba(59,130,246,0.2)'"
+              [style.color]="selected.isRead ? '#9ca3af' : '#3b82f6'">
+              <span class="status-dot" [style.background]="selected.isRead ? '#9ca3af' : '#3b82f6'"></span>
+              {{ selected.isRead ? "Read" : "Unread" }}
+            </span>
+          </div>
+
+          <ng-container *ngIf="hasData(selected.data)">
+            <div class="side-label">Additional info</div>
+            <div class="json-box">
+              <pre class="json-pre">{{ selected.data | json }}</pre>
+            </div>
+          </ng-container>
+        </ng-container>
+
+
+        <!-- SUPPORT TICKET DETAILS -->
+        <ng-container *ngIf="activeTab === 'support'">
+          <div class="side-title">
+            Ticket details
+            <span *ngIf="selectedTicket" class="side-badge">ID {{ selectedTicket.id }}</span>
+          </div>
+
+          <ng-container *ngIf="selectedTicket; else noTicketSelection">
+            <div class="side-label">Subject</div>
+            <div class="side-value">{{ selectedTicket.subject }}</div>
+
+            <div class="side-label">Category</div>
+            <div class="side-value">{{ selectedTicket.category }}</div>
+
+            <div class="side-label">Status</div>
+            <div class="side-value">
+              <span class="badge" [style.background]="selectedTicket.status === 'OPEN' ? '#10b981' : '#6b7280'"
+                style="color:white; padding:2px 8px; border-radius:12px; font-size:11px;">
+                {{ selectedTicket.status }}
+              </span>
+            </div>
+
+            <div class="side-label">Message</div>
+            <div class="side-value" style="white-space: pre-wrap;">{{ selectedTicket.message }}</div>
+
+            <div class="side-label">Submitted</div>
+            <div class="side-value">{{ formatDateDetail(selectedTicket.createdAt) }}</div>
+
+            <div *ngIf="selectedTicket.attachmentUrl" style="margin-top:10px;">
+              <a [href]="selectedTicket.attachmentUrl" target="_blank" class="pill-button"
+                style="font-size:12px; background:#2563eb; color:white;">
+                Download Attachment
+              </a>
+            </div>
+          </ng-container>
+
+          <ng-template #noTicketSelection>
+            <div style="font-size: 13px; color: #9ca3af;">
+              Select a ticket to view details.
+            </div>
+          </ng-template>
+        </ng-container>
+
+        <ng-template #noSelection>
+          <div *ngIf="activeTab === 'notifications'" style="font-size: 13px; color: #9ca3af;">
+            Select a notification to view details.
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
