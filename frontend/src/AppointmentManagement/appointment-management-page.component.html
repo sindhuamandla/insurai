@@ -1,0 +1,92 @@
+<div class="page">
+  <main class="main">
+    <div class="header-row">
+      <div class="title-col">
+        <div class="title">Appointment Management</div>
+        <div class="subtitle">
+          View and filter all customer appointments across agents.
+        </div>
+      </div>
+      <div class="filters-row">
+        <select class="select" [(ngModel)]="statusFilter">
+          <option value="ALL">All statuses</option>
+          <option value="PENDING">Pending</option>
+          <option value="CONFIRMED">Confirmed</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="CANCELLED">Cancelled</option>
+        </select>
+
+        <select class="select" [(ngModel)]="agentFilter">
+          <option value="ALL">All agents</option>
+          <option *ngFor="let opt of agentOptions" [value]="opt.id">
+            {{ opt.name }}
+          </option>
+        </select>
+
+        <select class="select" [(ngModel)]="dateFilter">
+          <option value="ALL">Any date</option>
+          <option value="TODAY">Today</option>
+          <option value="NEXT_7">Next 7 days</option>
+          <option value="THIS_MONTH">This month</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="shell">
+      <div *ngIf="loading" class="loading">Loading appointments…</div>
+      <div *ngIf="error" class="error">{{ error }}</div>
+
+      <div class="table-wrapper">
+        <div *ngIf="filteredAppointments.length === 0 && !loading" class="empty">
+          No appointments found for selected filters.
+        </div>
+
+        <table *ngIf="filteredAppointments.length > 0" class="table">
+          <thead>
+            <tr>
+              <th class="th">ID</th>
+              <th class="th">Customer</th>
+              <th class="th">Agent</th>
+              <th class="th">Scheduled</th>
+              <th class="th">Status</th>
+              <th class="th">Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let a of filteredAppointments">
+              <td class="td">{{ a.id }}</td>
+              <td class="td">{{ a.customerName || a.customerId }}</td>
+              <td class="td">{{ a.agentName || a.agentId || "—" }}</td>
+              <td class="td">
+                {{ a.scheduledAt ? (a.scheduledAt | date:'medium') : "Not scheduled" }}
+              </td>
+              <td class="td">
+                <ng-container *ngIf="authRole !== 'CUSTOMER'; else customerBadge">
+                  <select class="status-select" [ngModel]="a.status" (ngModelChange)="handleStatusChange(a.id, $event)"
+                    [disabled]="updatingId === a.id">
+                    <option value="PENDING">PENDING</option>
+                    <option value="CONFIRMED">CONFIRMED</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                  </select>
+                </ng-container>
+                <ng-template #customerBadge>
+                  <span class="badge" [ngClass]="{
+                    'badge-confirmed': a.status === 'CONFIRMED',
+                    'badge-pending': a.status === 'PENDING',
+                    'badge-cancelled': a.status === 'CANCELLED',
+                    'badge-completed': a.status === 'COMPLETED',
+                    'badge-other': !['CONFIRMED','PENDING','CANCELLED','COMPLETED'].includes(a.status)
+                  }">
+                    {{ a.status || 'N/A' }}
+                  </span>
+                </ng-template>
+              </td>
+              <td class="td">{{ a.reason || "—" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
