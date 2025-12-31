@@ -1,0 +1,172 @@
+<div class="plans-root app-root">
+  <header class="plans-topbar">
+    <div class="plans-top-left">
+      <div class="plans-title">Plans &amp; Offers</div>
+      <div class="plans-subtitle">
+        Explore and compare InsurAI-supported insurance plans.
+        <span *ngIf="isAgent" style="margin-left: 8px; color: #a5b4fc; font-size: 0.8rem;">
+          Agent view: select a plan to recommend or book for customers.
+        </span>
+      </div>
+    </div>
+
+    <div class="plans-top-center">
+      <div class="plans-tabs">
+        <button *ngFor="let tab of categoryTabs" class="plans-tab" [class.active]="activeCategory === tab"
+          (click)="activeCategory = tab" type="button">
+          {{ tab }}
+        </button>
+      </div>
+    </div>
+
+    <div class="plans-top-right">
+      <input type="text" class="plans-search" placeholder="Search by provider or plan name" [(ngModel)]="search" />
+      <select class="plans-sort" [(ngModel)]="sortBy">
+        <option *ngFor="let opt of sortOptions" [value]="opt">
+          Sort by {{ opt }}
+        </option>
+      </select>
+    </div>
+  </header>
+
+  <main class="plans-main">
+    <p *ngIf="loading" style="color: #9ca3af; font-size: 0.9rem;">Loading plans…</p>
+    <p *ngIf="error" style="color: #fecaca; font-size: 0.85rem;">{{ error }}</p>
+
+    <section class="plans-grid">
+      <article *ngFor="let p of filteredPlans" class="plan-card glass-card">
+        <div class="plan-card-top">
+          <div class="plan-icon">
+            {{ getIcon(p.category) }}
+          </div>
+          <div>
+            <div class="plan-name">{{ p.name }}</div>
+            <div class="plan-provider">{{ p.provider }}</div>
+          </div>
+          <div *ngIf="p.isBestValue" class="plan-badge">Best Value</div>
+        </div>
+
+        <div class="plan-body">
+          <div class="plan-row">
+            <span>Premium</span>
+            <strong>
+              ₹{{ p.basePremium | number:'1.0-0' }}/year
+            </strong>
+          </div>
+          <div class="plan-row">
+            <span>Coverage</span>
+            <strong>
+              Up to ₹{{ p.coverageAmount | number:'1.0-0' }}
+            </strong>
+          </div>
+          <div class="plan-row">
+            <span>Category</span>
+            <strong>{{ p.category }}</strong>
+          </div>
+          <div class="plan-features">
+            <span *ngFor="let f of p.features">{{ f }}</span>
+          </div>
+        </div>
+
+        <div class="plan-actions">
+          <button class="btn-outline" type="button" (click)="detailPlan = p">
+            View Details
+          </button>
+
+          <button class="btn-primary" type="button" (click)="handleContactOrBook(p)">
+            {{ isAgent ? "Book for Customer" : "Contact Agent" }}
+          </button>
+
+          <button *ngIf="p.brochureUrl" class="plan-download" type="button" (click)="openBrochure(p.brochureUrl)">
+            Brochure
+          </button>
+        </div>
+
+        <label class="plan-compare-row">
+          <input type="checkbox" [checked]="isCompareSelected(p.id)" (change)="toggleCompare(p.id, $event)" />
+          <span>Add to Compare</span>
+        </label>
+      </article>
+
+      <p *ngIf="filteredPlans.length === 0 && !loading" style="color: #9ca3af; font-size: 0.9rem;">
+        No plans match your filters.
+      </p>
+    </section>
+
+    <section *ngIf="comparePlansList.length >= 2" class="plans-compare-bar glass-card">
+      <span>{{ comparePlansList.length }} plans selected for comparison</span>
+      <button class="btn-primary" type="button" (click)="scrollToCompare()">
+        Compare Now
+      </button>
+    </section>
+
+    <section *ngIf="comparePlansList.length >= 2" id="plans-compare-section" class="plans-compare glass-card">
+      <h2>Compare plans</h2>
+      <div class="plans-compare-grid">
+        <div *ngFor="let p of comparePlansList" class="plans-compare-column">
+          <div class="plan-name">{{ p.name }}</div>
+          <div class="plan-provider">{{ p.provider }}</div>
+          <div class="compare-row">
+            <span>Category</span>
+            <strong>{{ p.category }}</strong>
+          </div>
+          <div class="compare-row">
+            <span>Premium</span>
+            <strong>
+              ₹{{ p.basePremium | number:'1.0-0' }}/year
+            </strong>
+          </div>
+          <div class="compare-row">
+            <span>Coverage Limit</span>
+            <strong>
+              ₹{{ p.coverageAmount | number:'1.0-0' }}
+            </strong>
+          </div>
+          <div class="compare-row">
+            <span>Key Features</span>
+            <div class="compare-features">
+              <span *ngFor="let f of p.features">{{ f }}</span>
+            </div>
+          </div>
+          <div class="compare-row">
+            <span>Best for</span>
+            <div class="compare-best">
+              {{ p.isBestValue
+              ? "Great balance of coverage and price."
+              : "Suited for specific coverage needs." }}
+            </div>
+          </div>
+          <div class="compare-actions">
+            <button class="btn-primary" type="button" (click)="handleContactOrBook(p)">
+              {{ isAgent ? "Book for Customer" : "Choose & Contact Agent" }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section *ngIf="detailPlan" class="plans-modal-backdrop">
+      <div class="plans-modal glass-card">
+        <h2>{{ detailPlan.name }}</h2>
+        <div class="plan-provider">{{ detailPlan.provider }}</div>
+        <p style="font-size: 0.85rem; color: #9ca3af">
+          Category: {{ detailPlan.category }} • Premium: ₹
+          {{ detailPlan.basePremium | number:'1.0-0' }}/year •
+          Coverage: ₹
+          {{ detailPlan.coverageAmount | number:'1.0-0' }}
+        </p>
+
+        <h4>Highlights</h4>
+        <ul style="font-size: 0.85rem">
+          <li *ngFor="let f of detailPlan.features">{{ f }}</li>
+        </ul>
+
+        <div class="plans-modal-actions">
+          <button class="btn-outline" type="button" (click)="detailPlan = null">
+            Close
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
