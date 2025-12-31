@@ -1,0 +1,197 @@
+<div class="page-root">
+  <div class="top-bar">
+    <h1 class="top-title">Account &amp; Profile</h1>
+    <span class="role-pill">{{ roleLabel }}</span>
+  </div>
+
+  <div *ngIf="loadError" class="error-banner">{{ loadError }}</div>
+
+  <div class="shell">
+    <div class="tab-row">
+      <button *ngFor="let t of ['Profile', 'Security', 'Preferences']" type="button" class="tab-btn"
+        [class.active]="tab === t" (click)="tab = t; saveMessage = ''; saveError = ''">
+        {{ t === "Profile"
+        ? "Profile overview"
+        : t === "Security"
+        ? "Security"
+        : "Notifications & UI"
+        }}
+      </button>
+    </div>
+
+    <div class="card">
+      <p *ngIf="(!profile || !settings) && !loadError" class="muted">Loading profile…</p>
+
+      <ng-container *ngIf="profile && settings">
+        <!-- PROFILE TAB -->
+        <section *ngIf="tab === 'Profile'">
+          <h2 class="section-title">Personal information</h2>
+
+          <p *ngIf="isAgent" class="info-badge">
+            As an agent, your profile is visible to customers when they book
+            appointments.
+          </p>
+
+          <div class="form-grid">
+            <label class="field">
+              <span class="field-label">Full name</span>
+              <input class="input" [(ngModel)]="profile.name" />
+            </label>
+
+            <label class="field">
+              <span class="field-label">Email</span>
+              <input class="input" [value]="profile.email || ''" disabled />
+            </label>
+
+            <label class="field">
+              <span class="field-label">Phone</span>
+              <input class="input" [(ngModel)]="profile.phone" />
+            </label>
+
+            <label class="field">
+              <span class="field-label">Location</span>
+              <input class="input" [(ngModel)]="profile.location" />
+            </label>
+
+            <label class="field" style="grid-column: 1 / -1;">
+              <span class="field-label">Short bio</span>
+              <textarea class="textarea" rows="3" [(ngModel)]="profile.bio"></textarea>
+            </label>
+
+            <ng-container *ngIf="isAgent">
+              <label class="field">
+                <span class="field-label">Years of experience</span>
+                <input type="number" min="0" class="input" [(ngModel)]="profile.experienceYears" />
+              </label>
+
+              <label class="field" style="grid-column: 1 / -1;">
+                <span class="field-label">Specialties</span>
+                <input class="input" placeholder="e.g. Group Health, Motor Fleet" [(ngModel)]="profile.specialties" />
+              </label>
+            </ng-container>
+
+            <label *ngIf="isCustomer" class="field">
+              <span class="field-label">Company name</span>
+              <input class="input" [(ngModel)]="profile.companyName" />
+            </label>
+          </div>
+
+          <button type="button" class="primary-save-btn" (click)="handleSaveProfile()" [disabled]="savingProfile">
+            {{ savingProfile ? "Saving…" : "Save changes" }}
+          </button>
+        </section>
+
+        <!-- SECURITY TAB -->
+        <section *ngIf="tab === 'Security'">
+          <h2 class="section-title">Security</h2>
+          <h3 class="sub-title">Login activity</h3>
+          <p class="body-text">
+            Last login: Today, 10:12 AM from Hyderabad, India.
+          </p>
+          <p class="muted">
+            Future enhancement: show recent devices, revoke sessions, and enable
+            two‑factor authentication.
+          </p>
+        </section>
+
+        <!-- PREFERENCES TAB -->
+        <section *ngIf="tab === 'Preferences'">
+          <h2 class="section-title">Notification &amp; UI preferences</h2>
+
+          <h3 class="sub-title">Notification preferences</h3>
+
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-title">Appointment Updates</div>
+              <p class="muted">Reminders, new bookings, reschedules and cancellations.</p>
+            </div>
+            <button type="button" class="toggle-btn" [class.on]="settings.notifyApptInApp"
+              (click)="toggleSetting('notifyApptInApp')">
+              {{ settings.notifyApptInApp ? "On" : "Off" }}
+            </button>
+          </div>
+
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-title">Appointment Emails</div>
+              <p class="muted">Receive appointment updates via email.</p>
+            </div>
+            <button type="button" class="toggle-btn" [class.on]="settings.notifyApptEmail"
+              (click)="toggleSetting('notifyApptEmail')">
+              {{ settings.notifyApptEmail ? "On" : "Off" }}
+            </button>
+          </div>
+
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-title">Appointment SMS</div>
+              <p class="muted">Last‑minute reminders and critical updates.</p>
+            </div>
+            <button type="button" class="toggle-btn" [class.on]="settings.notifyApptSms"
+              (click)="toggleSetting('notifyApptSms')">
+              {{ settings.notifyApptSms ? "On" : "Off" }}
+            </button>
+          </div>
+
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-title">Promotional emails</div>
+              <p class="muted">New plans, offers and product updates.</p>
+            </div>
+            <button type="button" class="toggle-btn" [class.on]="settings.notifyPromoEmail"
+              (click)="toggleSetting('notifyPromoEmail')">
+              {{ settings.notifyPromoEmail ? "On" : "Off" }}
+            </button>
+          </div>
+
+          <h3 class="sub-title" style="margin-top: 1.8rem;">UI preferences</h3>
+
+          <div class="ui-row">
+            <div>
+              <div class="field-label">Accent color</div>
+              <p class="muted">Personalize highlight color in the interface.</p>
+            </div>
+            <div class="accent-row">
+              <button *ngFor="let c of ['teal', 'blue', 'purple', 'green']" type="button" class="accent-dot"
+                [class.active]="settings.accentColor === c"
+                [style.background]="c === 'teal' ? '#14b8a6' : c === 'blue' ? '#3b82f6' : c === 'purple' ? '#a855f7' : '#22c55e'"
+                (click)="setAccent(c)"></button>
+            </div>
+          </div>
+
+          <div class="ui-row">
+            <div>
+              <div class="field-label">Date format</div>
+              <p class="muted">How dates appear across the app.</p>
+            </div>
+            <select class="select" [(ngModel)]="settings.dateFormat">
+              <option value="DD-MM-YYYY">DD-MM-YYYY</option>
+              <option value="MM-DD-YYYY">MM-DD-YYYY</option>
+              <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+            </select>
+          </div>
+
+          <div class="ui-row">
+            <div>
+              <div class="field-label">Time format</div>
+              <p class="muted">How times appear across the app.</p>
+            </div>
+            <select class="select" [(ngModel)]="settings.timeFormat">
+              <option value="24h">24-hour</option>
+              <option value="12h">12-hour</option>
+            </select>
+          </div>
+
+          <button type="button" class="primary-save-btn" (click)="handleSaveSettings()" [disabled]="savingSettings">
+            {{ savingSettings ? "Saving…" : "Save preferences" }}
+          </button>
+        </section>
+
+        <div *ngIf="saveMessage || saveError" class="save-banner"
+          [ngClass]="saveError ? 'save-banner-error' : 'save-banner-success'">
+          {{ saveError || saveMessage }}
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
