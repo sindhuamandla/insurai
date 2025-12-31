@@ -1,0 +1,15 @@
+.assistant-root {
+  min-height: 100vh;
+  /* app-root styles might be global, but ensuring container style */
+}
+
+.assistant-main {
+  grid-template-columns: 1fr;
+  max-width: 1200px;
+  margin: 0 auto;
+  /* assuming layout wrapper styles */
+  display: grid;
+  padding: 24px;
+  height: calc(100vh - 80px);
+  /* rough estimate */
+}

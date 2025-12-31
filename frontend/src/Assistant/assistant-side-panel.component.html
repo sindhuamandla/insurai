@@ -1,0 +1,32 @@
+<aside class="panel">
+  <h3 class="title">Quick actions</h3>
+  <p class="subtitle">
+    Jump straight to the most common tasks.
+  </p>
+
+  <div class="cards-container">
+    <button class="card" type="button" (click)="viewPlans.emit()">
+      <div class="icon-wrapper">🚗</div>
+      <div class="card-content">
+        <div class="card-title">Show car insurance plans</div>
+        <div class="card-text">View curated plans and coverage options.</div>
+      </div>
+    </button>
+
+    <button class="card" type="button">
+      <div class="icon-wrapper">📊</div>
+      <div class="card-content">
+        <div class="card-title">Compare plans</div>
+        <div class="card-text">Compare coverage and pricing across companies.</div>
+      </div>
+    </button>
+
+    <button class="card" type="button" (click)="schedule.emit()">
+      <div class="icon-wrapper">📅</div>
+      <div class="card-content">
+        <div class="card-title">Book an appointment</div>
+        <div class="card-text">Connect with an agent for a dedicated consultation.</div>
+      </div>
+    </button>
+  </div>
+</aside>
