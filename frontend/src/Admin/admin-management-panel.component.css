@@ -1,0 +1,205 @@
+.shell {
+  margin-top: 16px;
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, rgba(139, 92, 246, 0.16), #0B0F19);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  box-shadow: 0 24px 55px rgba(15, 23, 42, 0.85);
+  padding: 14px 16px 12px;
+  box-sizing: border-box;
+  color: #F3F4F6;
+  font-size: 13px;
+}
+
+.tabs-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tab {
+  border-radius: 9999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: #0B0F19;
+  color: #9ca3af;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tab.active {
+  border: 1px solid rgba(59, 130, 246, 0.9);
+  background: rgba(59, 130, 246, 0.35);
+  color: #e5e7eb;
+}
+
+.table-wrapper {
+  border-radius: 14px;
+  border: 1px solid rgba(31, 41, 55, 0.9);
+  background: #1E2538;
+  overflow: auto;
+  max-height: 520px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.th {
+  text-align: left;
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+  color: #9ca3af;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.td {
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(31, 41, 55, 0.7);
+  white-space: nowrap;
+}
+
+.tr-hover:hover {
+  background-color: rgba(30, 41, 59, 0.5);
+  cursor: pointer;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 2px 8px;
+  border: 1px solid;
+  font-size: 11px;
+}
+
+.pill-button {
+  border-radius: 9999px;
+  padding: 4px 10px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: #151B2B;
+  color: #e5e7eb;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.disabled-button {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.error {
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.6);
+  color: #fecaca;
+  font-size: 12px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.small-text {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.input {
+  width: 100%;
+  border-radius: 9999px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: #0B0F19;
+  color: #e5e7eb;
+  font-size: 12px;
+  padding: 6px 10px;
+  outline: none;
+  margin-bottom: 6px;
+  box-sizing: border-box;
+}
+
+.textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: #0B0F19;
+  color: #e5e7eb;
+  font-size: 12px;
+  padding: 6px 10px;
+  outline: none;
+  margin-bottom: 6px;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 60px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.toggle {
+  cursor: pointer;
+  border-radius: 9999px;
+  padding: 3px 6px;
+  min-width: 80px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  font-size: 11px;
+  background: #151B2B;
+  color: #e5e7eb;
+}
+
+.chart-card {
+  margin-top: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(31, 41, 55, 0.9);
+  background: #151B2B;
+  padding: 12px 14px;
+  box-sizing: border-box;
+}
+
+.chart-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.chart-canvas {
+  position: relative;
+  width: 100%;
+  height: 120px;
+}
+
+.chart-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.chart-axis-label {
+  font-size: 10px;
+  fill: #6b7280;
+}

@@ -1,0 +1,71 @@
+<div class="shell">
+  <div class="section-header">
+    <span class="section-title">Trends</span>
+    <span class="section-hint">Customers, agents, and appointments over time.</span>
+  </div>
+
+  <!-- User Charts -->
+  <div class="small-text" *ngIf="loading">Loading charts...</div>
+  <div class="small-text" *ngIf="!loading && (!userStats || userStats.length === 0)">No user stats available.</div>
+
+  <div class="charts-row" *ngIf="!loading && userStats && userStats.length > 0 && userChartData">
+    <!-- New customers per day -->
+    <div class="chart-card">
+      <div class="chart-title">New customers per day (last 14 days)</div>
+      <div class="chart-canvas">
+        <svg class="chart-svg" [attr.viewBox]="'0 0 ' + userChartData.width + ' ' + userChartData.height">
+          <path *ngIf="userChartData.customerPath" [attr.d]="userChartData.customerPath" class="chart-line"
+            style="stroke: #3b82f6" />
+          <ng-container *ngFor="let l of userChartData.xLabels; let i = index">
+            <text *ngIf="i % 3 === 0"
+              [attr.x]="calculateXLabel(l.idx, userChartData.xLabels.length, userChartData.width, userChartData.padding)"
+              [attr.y]="userChartData.height - 2" text-anchor="middle" class="chart-axis-label">
+              {{ l.date?.slice(5) }}
+            </text>
+          </ng-container>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Active agents per day -->
+    <div class="chart-card">
+      <div class="chart-title">Active agents per day</div>
+      <div class="chart-canvas">
+        <svg class="chart-svg" [attr.viewBox]="'0 0 ' + userChartData.width + ' ' + userChartData.height">
+          <path *ngIf="userChartData.agentPath" [attr.d]="userChartData.agentPath" class="chart-line"
+            style="stroke: #22c55e" />
+          <ng-container *ngFor="let l of userChartData.xLabels; let i = index">
+            <text *ngIf="i % 3 === 0"
+              [attr.x]="calculateXLabel(l.idx, userChartData.xLabels.length, userChartData.width, userChartData.padding)"
+              [attr.y]="userChartData.height - 2" text-anchor="middle" class="chart-axis-label">
+              {{ l.date?.slice(5) }}
+            </text>
+          </ng-container>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Appointment Chart -->
+  <div class="small-text" *ngIf="loading">Loading charts...</div>
+  <div class="small-text" *ngIf="!loading && (!appointmentStats || appointmentStats.length === 0)">No appointment stats
+    available.</div>
+
+  <div class="chart-card" *ngIf="!loading && appointmentStats && appointmentStats.length > 0 && appointmentChartData"
+    style="margin-top: 10px;">
+    <div class="chart-title">Appointments created per day (last 14 days)</div>
+    <div class="chart-canvas">
+      <svg class="chart-svg" [attr.viewBox]="'0 0 ' + appointmentChartData.width + ' ' + appointmentChartData.height">
+        <path *ngIf="appointmentChartData.path" [attr.d]="appointmentChartData.path" class="chart-line"
+          style="stroke: #f97316" />
+        <ng-container *ngFor="let l of appointmentChartData.xLabels; let i = index">
+          <text *ngIf="i % 3 === 0"
+            [attr.x]="calculateXLabel(l.idx, appointmentChartData.xLabels.length, appointmentChartData.width, appointmentChartData.padding)"
+            [attr.y]="appointmentChartData.height - 2" text-anchor="middle" class="chart-axis-label">
+            {{ l.date?.slice(5) }}
+          </text>
+        </ng-container>
+      </svg>
+    </div>
+  </div>
+</div>

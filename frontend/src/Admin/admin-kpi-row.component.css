@@ -1,0 +1,40 @@
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.kpi-card {
+  border-radius: 16px;
+  padding: 10px 12px;
+  background: radial-gradient(circle at top left, rgba(139, 92, 246, 0.18), #151B2B);
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+  cursor: default;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s;
+}
+
+.kpi-card.clickable {
+  cursor: pointer;
+}
+
+.label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.value {
+  font-size: 22px;
+  font-weight: 600;
+  color: #F3F4F6;
+}
+
+.sub {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #9ca3af;
+}

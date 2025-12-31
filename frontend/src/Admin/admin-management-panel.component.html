@@ -1,0 +1,218 @@
+<div class="shell">
+  <!-- Tabs -->
+
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <!-- USERS MODE -->
+  <div *ngIf="activeTab === 'users'">
+    <div class="table-wrapper">
+      <!-- Create Agent Section -->
+      <div *ngIf="createAgentOpen; else createButton" style="padding: 12px;">
+        <div class="section-header">
+          <div class="section-title">Create New Agent</div>
+        </div>
+        <div class="form-row">
+          <input class="input" placeholder="Name" [(ngModel)]="newAgent.name">
+          <input class="input" placeholder="Email" [(ngModel)]="newAgent.email">
+        </div>
+        <div class="form-row">
+          <input class="input" placeholder="Phone" [(ngModel)]="newAgent.phone">
+          <input class="input" placeholder="Password" type="password" [(ngModel)]="newAgent.password">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="pill-button" (click)="createAgentOpen = false">Cancel</button>
+          <button type="button" class="pill-button" [disabled]="agentCreating"
+            style="background: rgba(37,99,235,0.8); border-color: rgba(37,99,235,1);" (click)="handleCreateAgent()">
+            {{ agentCreating ? "Creating..." : "Create Agent" }}
+          </button>
+        </div>
+      </div>
+      <ng-template #createButton>
+        <div style="display: flex; justify-content: flex-end; padding: 8px;">
+          <button type="button" class="pill-button" (click)="createAgentOpen = true">+ Create Agent</button>
+        </div>
+      </ng-template>
+
+      <!-- Users Table -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="th">ID</th>
+            <th class="th">Email</th>
+            <th class="th">Name</th>
+            <th class="th">Role</th>
+            <th class="th">Status</th>
+            <th class="th">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="users.length === 0">
+            <td class="td" colspan="6">No users found.</td>
+          </tr>
+          <tr *ngFor="let u of visibleUsers" class="tr-hover" (click)="onSelectItem(u)">
+            <td class="td">{{ u.id }}</td>
+            <td class="td">{{ u.email }}</td>
+            <td class="td">{{ u.name || "-" }}</td>
+            <td class="td">
+              <span class="badge"
+                [style.border-color]="u.role === 'ADMIN' ? '#f97316' : u.role === 'AGENT' ? '#22c55e' : '#60a5fa'"
+                [style.color]="u.role === 'ADMIN' ? '#f97316' : u.role === 'AGENT' ? '#22c55e' : '#60a5fa'">
+                {{ u.role }}
+              </span>
+            </td>
+            <td class="td">
+              <span class="badge" [style.border-color]="u.enabled ? '#22c55e' : '#ef4444'"
+                [style.color]="u.enabled ? '#22c55e' : '#ef4444'">
+                {{ u.enabled ? "Enabled" : "Disabled" }}
+              </span>
+            </td>
+            <td class="td">
+              <div style="display: flex; gap: 6px;" (click)="$event.stopPropagation()">
+                <select class="toggle" [ngModel]="u.role" (ngModelChange)="handleRoleChange(u, $event)"
+                  [disabled]="roleUpdateLoadingId === u.id">
+                  <option value="CUSTOMER">CUSTOMER</option>
+                  <option value="AGENT">AGENT</option>
+                  <option value="ADMIN">ADMIN</option>
+                </select>
+                <button type="button" class="pill-button" [class.disabled-button]="statusUpdateLoadingId === u.id"
+                  [disabled]="statusUpdateLoadingId === u.id" (click)="handleStatusToggle(u)">
+                  {{ statusUpdateLoadingId === u.id ? "Saving..." : u.enabled ? "Disable" : "Enable" }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- POLICIES MODE -->
+  <div *ngIf="activeTab === 'policies'">
+    <!-- Charts -->
+    <ng-container *ngIf="buildBarChartData(policyCategoryStats, 'totalPolicies') as catData">
+      <div class="chart-card">
+        <div class="chart-title">Total policies by category</div>
+        <div class="chart-canvas">
+          <svg *ngIf="policyCategoryStats.length > 0; else noCatStats" class="chart-svg"
+            [attr.viewBox]="'0 0 ' + catData.width + ' ' + catData.height">
+            <g *ngFor="let c of policyCategoryStats; let idx = index">
+              <rect [attr.x]="catData.padding + idx * (catData.barWidth + 4)"
+                [attr.y]="calculateRectY(catData.height, catData.padding, calculateRectHeight(c.totalPolicies, catData.maxValue, catData.height, catData.padding))"
+                [attr.width]="catData.barWidth"
+                [attr.height]="calculateRectHeight(c.totalPolicies, catData.maxValue, catData.height, catData.padding)"
+                fill="#3b82f6" rx="3" />
+              <text [attr.x]="catData.padding + idx * (catData.barWidth + 4) + catData.barWidth / 2"
+                [attr.y]="catData.height - 2" text-anchor="middle" class="chart-axis-label">
+                {{ c.category.slice(0, 6) }}
+              </text>
+            </g>
+          </svg>
+          <ng-template #noCatStats>
+            <div class="small-text">No policy category stats available.</div>
+          </ng-template>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="buildBarChartData(policyUsageStats, 'usageCount') as usageData">
+      <div class="chart-card">
+        <div class="chart-title">Policy category usage</div>
+        <div class="chart-canvas">
+          <svg *ngIf="policyUsageStats.length > 0; else noUsageStats" class="chart-svg"
+            [attr.viewBox]="'0 0 ' + usageData.width + ' ' + usageData.height">
+            <g *ngFor="let c of policyUsageStats; let idx = index">
+              <rect [attr.x]="usageData.padding + idx * (usageData.barWidth + 4)"
+                [attr.y]="calculateRectY(usageData.height, usageData.padding, calculateRectHeight(c.usageCount, usageData.maxValue, usageData.height, usageData.padding))"
+                [attr.width]="usageData.barWidth"
+                [attr.height]="calculateRectHeight(c.usageCount, usageData.maxValue, usageData.height, usageData.padding)"
+                fill="#22c55e" rx="3" />
+              <text [attr.x]="usageData.padding + idx * (usageData.barWidth + 4) + usageData.barWidth / 2"
+                [attr.y]="usageData.height - 2" text-anchor="middle" class="chart-axis-label">
+                {{ c.category.slice(0, 6) }}
+              </text>
+            </g>
+          </svg>
+          <ng-template #noUsageStats>
+            <div class="small-text">No policy usage stats available.</div>
+          </ng-template>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Plans Table -->
+    <div style="margin-top: 16px;">
+      <!-- Plan Edit Form -->
+      <div *ngIf="planEdit" style="margin-bottom: 10px;">
+        <div class="section-header">
+          <div class="section-title">{{ planEdit.id ? "Edit Policy Plan" : "Create Policy Plan" }}</div>
+        </div>
+        <div class="form-row">
+          <input class="input" placeholder="Plan name" [(ngModel)]="planEdit.name">
+          <input class="input" placeholder="Category (e.g. Car, Life)" [(ngModel)]="planEdit.category">
+        </div>
+        <div class="form-row">
+          <input class="input" placeholder="Premium" type="number" [(ngModel)]="planEdit.premiumAmount">
+          <input class="input" placeholder="Coverage" type="number" [(ngModel)]="planEdit.coverageAmount">
+        </div>
+        <textarea class="textarea" placeholder="Description" [(ngModel)]="planEdit.description"></textarea>
+        <div class="form-actions">
+          <button type="button" class="pill-button" (click)="cancelPlanEdit()">Cancel</button>
+          <button type="button" class="pill-button" [disabled]="planSaving"
+            style="background: rgba(37,99,235,0.8); border-color: rgba(37,99,235,1);" (click)="savePlan()">
+            {{ planSaving ? "Saving..." : "Save Plan" }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Add Button -->
+      <div *ngIf="!planEdit" style="display: flex; justify-content: flex-end; padding: 8px;">
+        <button type="button" class="pill-button" (click)="startCreatePlan()">+ Create Plan</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="th">Name</th>
+              <th class="th">Category</th>
+              <th class="th">Premium</th>
+              <th class="th">Coverage</th>
+              <th class="th">Status</th>
+              <th class="th">Desc</th>
+              <th class="th">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="plans.length === 0">
+              <td class="td" colspan="7">No plans found.</td>
+            </tr>
+            <tr *ngFor="let p of plans">
+              <td class="td">{{ p.name }}</td>
+              <td class="td">{{ p.category }}</td>
+              <td class="td">${{ p.premiumAmount }}</td>
+              <td class="td">${{ p.coverageAmount }}</td>
+              <td class="td">
+                <span class="badge" [style.border-color]="p.active ? '#22c55e' : '#ef4444'"
+                  [style.color]="p.active ? '#22c55e' : '#ef4444'">
+                  {{ p.active ? "Active" : "Inactive" }}
+                </span>
+              </td>
+              <td class="td" style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;">{{ p.description }}
+              </td>
+              <td class="td">
+                <div style="display: flex; gap: 6px;">
+                  <button class="pill-button" (click)="startEditPlan(p)">Edit</button>
+                  <button class="pill-button" (click)="togglePlanStatus(p)">{{ p.active ? "Deactivate" : "Activate"
+                    }}</button>
+                  <button class="pill-button" style="border-color: #ef4444; color: #ef4444;"
+                    (click)="deletePlan(p)">Delete</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

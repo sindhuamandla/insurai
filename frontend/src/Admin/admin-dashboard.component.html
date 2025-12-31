@@ -1,0 +1,97 @@
+<div class="page">
+  <!-- TopNav Placeholder as logic/dependency was missing -->
+  <!-- <app-top-nav ...></app-top-nav> -->
+
+  <main class="main">
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div class="header-row">
+        <div class="title-col">
+          <div class="title">Admin dashboard</div>
+          <div class="subtitle">Monitor customers, agents, plans, and appointments.</div>
+          <div *ngIf="error" class="error">{{ error }}</div>
+        </div>
+        <div class="pill-tabs">
+          <button type="button" class="pill" [class.active]="activeSection === 'dashboard'"
+            (click)="setActiveSection('dashboard')">Overview</button>
+          <button type="button" class="pill" [class.active]="activeSection === 'users'"
+            (click)="setActiveSection('users')">Users</button>
+          <button type="button" class="pill" [class.active]="activeSection === 'policies'"
+            (click)="setActiveSection('policies')">Plans</button>
+        </div>
+      </div>
+
+      <ng-container [ngSwitch]="activeSection">
+        <app-admin-management-panel *ngSwitchCase="'users'" mode="users"></app-admin-management-panel>
+        <app-admin-management-panel *ngSwitchCase="'policies'" mode="policies"></app-admin-management-panel>
+
+        <ng-container *ngSwitchDefault>
+          <app-admin-kpi-row [stats]="kpiStats" [loading]="loading"
+            (cardClick)="handleCardClick($event)"></app-admin-kpi-row>
+
+          <app-admin-charts-panel [userStats]="userStats" [appointmentStats]="appointmentStats"
+            [loading]="chartsLoading"></app-admin-charts-panel>
+
+          <div class="section-grid">
+            <!-- Recent Appointments -->
+            <div class="section-shell">
+              <div class="section-header">
+                <span class="section-title">Recent appointments</span>
+                <span class="section-hint">Prioritized list</span>
+              </div>
+              <div>
+                <div class="table-wrapper">
+                  <div *ngIf="recentAppointments.length === 0" class="empty">No recent appointments found.</div>
+                  <table *ngIf="recentAppointments.length > 0" class="table">
+                    <thead>
+                      <tr>
+                        <th class="th">Customer</th>
+                        <th class="th">Agent</th>
+                        <th class="th">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let a of recentAppointments">
+                        <td class="td">{{ a.customerName }}</td>
+                        <td class="td">{{ a.agentName }}</td>
+                        <td class="td">{{ a.status }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Latest Users -->
+            <div class="section-shell">
+              <div class="section-header">
+                <span class="section-title">Latest users</span>
+                <span class="section-hint">Recently registered</span>
+              </div>
+              <div>
+                <div class="table-wrapper">
+                  <div *ngIf="latestUsers.length === 0" class="empty">No users found.</div>
+                  <table *ngIf="latestUsers.length > 0" class="table">
+                    <thead>
+                      <tr>
+                        <th class="th">Name</th>
+                        <th class="th">Role</th>
+                        <th class="th">Joined</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let u of latestUsers">
+                        <td class="td">{{ u.name }}</td>
+                        <td class="td">{{ u.role }}</td>
+                        <td class="td">{{ u.createdAt | date }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </main>
+</div>

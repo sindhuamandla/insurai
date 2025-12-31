@@ -1,0 +1,27 @@
+<div class="kpi-row">
+  <div class="kpi-card" [class.clickable]="!loading" (click)="handle('appointments')">
+    <div class="label">Appointments</div>
+    <div class="value">{{ safeStats.appointments?.today || 0 }}</div>
+    <div class="sub">
+      Today • {{ safeStats.appointments?.last7Days || 0 }} last 7 days • {{ safeStats.appointments?.allTime || 0 }} all time
+    </div>
+  </div>
+
+  <div class="kpi-card" [class.clickable]="!loading" (click)="handle('customers')">
+    <div class="label">Customers</div>
+    <div class="value">{{ safeStats.customers }}</div>
+    <div class="sub">Active registered customers</div>
+  </div>
+
+  <div class="kpi-card" [class.clickable]="!loading" (click)="handle('agents')">
+    <div class="label">Agents</div>
+    <div class="value">{{ safeStats.agents }}</div>
+    <div class="sub">Active agents with access</div>
+  </div>
+
+  <div class="kpi-card" [class.clickable]="!loading" (click)="handle('plans')">
+    <div class="label">Plans</div>
+    <div class="value">{{ safeStats.plans }}</div>
+    <div class="sub">Active policy plans</div>
+  </div>
+</div>
