@@ -1,0 +1,61 @@
+<div class="page">
+  <div class="shell">
+    <div class="header-row">
+      <div class="title-block">
+        <div class="title">Book an appointment</div>
+        <div class="subtitle">
+          Follow the three simple steps to schedule a consultation with an
+          InsurAI agent.
+        </div>
+      </div>
+      <button type="button" class="pill-button" (click)="handleGoHome()">
+        ⬅ Back to home
+      </button>
+    </div>
+
+    <div class="layout">
+      <div class="card">
+        <div class="step-header">
+          <div>
+            <div class="step-label">Step {{ step }} of 3</div>
+            <div class="step-title">{{ currentStepTitle }}</div>
+          </div>
+          <div class="step-badges">
+            <span class="badge">
+              {{ selectedAgent ? selectedAgent.name : "No agent selected" }}
+            </span>
+            <span *ngIf="selectedDate && selectedSlot" class="badge">
+              {{ selectedDate }} · {{ selectedSlot.start }}–{{ selectedSlot.end }}
+            </span>
+          </div>
+        </div>
+
+        <app-step-agent-select *ngIf="step === 1" [openSlots]="openSlots" [selectedSlot]="selectedSlot"
+          [loadingSlots]="loadingSlots" [slotError]="slotError" (selectSlot)="handleSelectSlotFromList($event)"
+          (next)="step = 2"></app-step-agent-select>
+
+        <app-step-slot-select *ngIf="step === 2" [selectedAgent]="selectedAgent" [selectedDate]="selectedDate"
+          [selectedSlot]="selectedSlot" [slotsByDate]="slotsByDate" [loadingSlots]="loadingSlots"
+          [slotError]="slotError" (selectedDateChange)="selectedDate = $event"
+          (selectedSlotChange)="selectedSlot = $event" (back)="step = 1" (next)="step = 3"></app-step-slot-select>
+
+        <app-step-details-confirm *ngIf="step === 3" [selectedAgent]="selectedAgent" [selectedDate]="selectedDate"
+          [selectedSlot]="selectedSlot" [details]="details" [isConfirming]="isConfirming"
+          (detailsChange)="details = $event" (back)="step = 2" (confirm)="handleConfirm()"></app-step-details-confirm>
+
+        <div class="footer-row">
+          <span>
+            Appointments are free and confirmation details are shared over
+            email.
+          </span>
+          <span>Need help? Contact support from the Help menu.</span>
+        </div>
+
+        <div *ngIf="successInfo" class="success">
+          Appointment booked successfully. Your reference ID is
+          <strong>{{ successInfo.id }}</strong>.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

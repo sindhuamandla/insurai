@@ -1,0 +1,40 @@
+<div class="wrapper">
+  <div class="label">
+    Viewing availability for
+    <strong>{{ selectedAgent?.name || "an agent" }}</strong>.
+  </div>
+
+  <div class="label">1. Choose a date</div>
+  <div class="date-list">
+    <button *ngFor="let d of availableDates" type="button" class="date-button" [class.active]="d === selectedDate"
+      (click)="onDateSelect(d)">
+      {{ formatDateLabel(d) }}
+    </button>
+  </div>
+
+  <div class="label">2. Pick an open slot</div>
+
+  <div *ngIf="slotError" class="error">{{ slotError }}</div>
+  <div *ngIf="loadingSlots" class="helper">Loading slots…</div>
+
+  <div class="slots-grid">
+    <span *ngIf="!loadingSlots && slots.length === 0" class="helper">
+      No open slots for the selected date.
+    </span>
+
+    <button *ngFor="let s of slots" type="button" class="slot-button"
+      [class.active]="selectedSlot && selectedSlot.start === s.start && selectedSlot.end === s.end"
+      (click)="onSlotSelect(s)">
+      {{ s.start }}–{{ s.end }}
+    </button>
+  </div>
+
+  <div class="footer">
+    <button type="button" class="secondary-btn" (click)="back.emit()">
+      ← Back to agents
+    </button>
+    <button type="button" class="primary-btn" (click)="handleNext()">
+      Next: Details →
+    </button>
+  </div>
+</div>

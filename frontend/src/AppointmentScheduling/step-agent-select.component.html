@@ -1,0 +1,33 @@
+<div class="wrapper">
+  <div class="helper">
+    Choose from the list of available agents and time slots below.
+  </div>
+
+  <div *ngIf="slotError" class="error">{{ slotError }}</div>
+  <div *ngIf="loadingSlots" class="helper">Loading available agents and slots…</div>
+
+  <div class="list">
+    <div *ngIf="!loadingSlots && openSlots.length === 0" class="helper">
+      No open slots found for the next days.
+    </div>
+
+    <div *ngFor="let slot of openSlots" class="card" [class.active]="selectedSlot && selectedSlot.id === slot.id"
+      (click)="selectSlot.emit(slot)">
+
+      <div class="title-row">
+        <div class="name">{{ slot.agentName || "Agent" }}</div>
+        <div class="date">{{ formatDateLabel(slot.date) }}</div>
+      </div>
+      <div class="meta">
+        Time: {{ slot.start }}–{{ slot.end }}
+      </div>
+      <div *ngIf="slot.notes" class="notes">Note: {{ slot.notes }}</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <button type="button" class="primary-btn" (click)="handleNext()">
+      Next: Pick slot →
+    </button>
+  </div>
+</div>

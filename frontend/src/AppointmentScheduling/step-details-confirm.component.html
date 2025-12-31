@@ -1,0 +1,26 @@
+<div class="wrapper">
+  <div class="row">
+    <div class="label">Agent</div>
+    <div class="value-box">{{ selectedAgent?.name || "Any agent" }}</div>
+  </div>
+
+  <div class="row">
+    <div class="label">Date & time</div>
+    <div class="value-box">{{ summaryText }}</div>
+  </div>
+
+  <div class="row">
+    <div class="label">Reason for appointment</div>
+    <textarea class="textarea" [ngModel]="details.reason" (ngModelChange)="handleReasonChange($event)"
+      placeholder="Briefly describe what you want to discuss…"></textarea>
+  </div>
+
+  <div class="footer">
+    <button type="button" class="secondary-btn" (click)="back.emit()">
+      ← Back
+    </button>
+    <button type="button" class="primary-btn" (click)="handleConfirmClick()" [disabled]="isConfirming">
+      {{ isConfirming ? "Booking…" : "Confirm appointment →" }}
+    </button>
+  </div>
+</div>
