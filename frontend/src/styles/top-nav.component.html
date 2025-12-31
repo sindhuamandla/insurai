@@ -1,0 +1,71 @@
+<div class="page-root">
+  <div class="nav-shell">
+    <div class="navbar">
+      <div class="nav-left">
+        <div class="logo-pill" (click)="goHome.emit()">
+          <div class="logo-icon">🛡️</div>
+          <div class="logo-text">
+            INSU<span style="color: #3B82F6">RAI</span>
+          </div>
+        </div>
+
+        <div class="link-row">
+          <button type="button" class="nav-link" (click)="goHome.emit()">
+            Home
+          </button>
+
+          <button type="button" class="nav-link" (click)="viewPlans.emit()">
+            Plans
+          </button>
+
+          <ng-container *ngIf="isCustomer">
+            <button type="button" class="nav-link" (click)="openAssistant.emit()">
+              Assistant
+            </button>
+            <button type="button" class="nav-link" (click)="openScheduling.emit()">
+              Book appointment
+            </button>
+          </ng-container>
+
+          <button *ngIf="isAgent" type="button" class="nav-link" (click)="openAvailability.emit()">
+            My availability
+          </button>
+
+          <button *ngIf="isAdmin" type="button" class="nav-link nav-link-primary" (click)="openAdmin.emit()">
+            Admin dashboard
+          </button>
+
+          <button *ngIf="!isAdmin" type="button" class="nav-link" (click)="openContact.emit()">
+            Contact
+          </button>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <ng-container *ngIf="isLoggedIn">
+          <button type="button" class="icon-badge" (click)="openNotifications.emit()">
+            <span class="bell-icon">🔔</span>
+            <span class="badge-dot"></span>
+          </button>
+
+          <button type="button" class="profile-badge" (click)="openProfile.emit()">
+            <span class="profile-icon">👤</span>
+          </button>
+
+          <button type="button" class="text-link" (click)="logout.emit()">
+            Logout
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="!isLoggedIn">
+          <button type="button" class="text-link" (click)="login.emit()">
+            Log in
+          </button>
+          <button type="button" class="get-started-btn" (click)="register.emit()">
+            Get started
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
